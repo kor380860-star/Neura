@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEURA — Искусство Интеллекта</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ================= БАЗА (СВЕТЛАЯ ТЕМА) ================= */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #ffffff;
+      --bg-alt: #f8f8f9;
+      --text: #050505;
+      --muted: #52525b;
+      --accent: #000000;
+      --border: rgba(0, 0, 0, 0.08);
+      --border-hover: rgba(0, 0, 0, 0.2);
+      --glass: rgba(255, 255, 255, 0.85);
+      --shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+    }
+    
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text);
+      line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased;
+    }
+
+    .bg-orb { position: fixed; border-radius: 50%; filter: blur(150px); z-index: -1; opacity: 0.6; }
+    .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: #f0f0f2; }
+    .orb-2 { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: #f4f4f5; }
+
+    h1, h2, h3, .brand { font-family: 'Outfit', sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    .container { width: min(1200px, 90%); margin: 0 auto; }
+
+    /* КНОПКИ */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 16px 36px; border-radius: 100px; font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; transition: all 0.3s ease; 
+      border: 1px solid transparent; font-family: 'Inter', sans-serif;
+      letter-spacing: 0.5px;
+    }
+    .btn-primary { background: var(--text); color: var(--bg); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); }
+    .btn-primary:hover { background: #333; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border-hover); }
+    .btn-outline:hover { border-color: var(--text); background: var(--text); color: var(--bg); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
+
+    /* ХЕДЕР */
+    header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+    .nav { display: flex; justify-content: space-between; align-items: center; height: 80px; }
+    .brand { font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; gap: 12px; }
+    .brand-icon { width: 32px; height: 32px; background: var(--text); border-radius: 8px; }
+    .nav-links { display: flex; gap: 24px; font-size: 0.85rem; font-weight: 500; color: var(--muted); }
+    .nav-links a { transition: 0.3s; }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ГЛАВНЫЙ ЭКРАН */
+    .hero { padding: 180px 0 100px; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: center; }
+    .hero h1 { font-size: clamp(3rem, 5.5vw, 4.8rem); line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 24px; }
+    .hero h1 span { color: var(--muted); }
+    .hero p { font-size: 1.1rem; color: var(--muted); max-width: 480px; margin-bottom: 40px; }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-features { display: flex; gap: 24px; margin-top: 40px; font-size: 0.85rem; color: var(--muted); }
+    .hero-features span { display: flex; align-items: center; gap: 8px; }
+    .hero-features svg { width: 16px; height: 16px; color: var(--text); }
+    .hero-visual { position: relative; height: 500px; display: flex; justify-content: center; align-items: center; }
+    .core { width: 250px; height: 250px; border-radius: 50%; background: radial-gradient(circle, #fff 0%, #f0f0f0 50%, #e4e4e7 100%); box-shadow: inset 0 0 40px rgba(0,0,0,0.05), 0 20px 50px rgba(0,0,0,0.1); position: relative; animation: float 6s ease-in-out infinite; border: 1px solid rgba(0,0,0,0.05); }
+    .ring { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 50%; }
+    .ring-1 { width: 350px; height: 350px; animation: spin 10s linear infinite; border-top-color: #000; }
+    .ring-2 { width: 450px; height: 450px; animation: spin 15s linear infinite reverse; border-bottom-color: #000; }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+    @keyframes spin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+
+    /* СЕКЦИИ */
+    .section { padding: 100px 0; border-top: 1px solid var(--border); }
+    .section-header { text-align: center; margin-bottom: 60px; }
+    .section-header h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 15px; letter-spacing: -1px; }
+    .section-header p { color: var(--muted); font-size: 1.1rem; }
+
+    /* ПРЕИМУЩЕСТВА */
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .feature-card { background: var(--bg); border: 1px solid var(--border); border-radius: 24px; padding: 40px; transition: 0.3s; box-shadow: var(--shadow); }
+    .feature-card:hover { transform: translateY(-5px); border-color: var(--border-hover); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+    .feature-icon { width: 50px; height: 50px; border-radius: 14px; background: var(--bg-alt); border: 1px solid var(--border); display: grid; place-items: center; margin-bottom: 24px; color: var(--text); }
+    .feature-icon svg { width: 24px; height: 24px; stroke-width: 1.5; }
+    .feature-card h3 { font-size: 1.3rem; margin-bottom: 12px; }
+    .feature-card p { color: var(--muted); font-size: 0.95rem; }
+
+    /* ПРОГРАММА */
+    .roadmap { max-width: 800px; margin: 0 auto; position: relative; }
+    .roadmap::before { content: ''; position: absolute; left: 24px; top: 0; bottom: 0; width: 1px; background: var(--border-hover); }
+    .step { position: relative; padding-left: 70px; margin-bottom: 40px; }
+    .step:last-child { margin-bottom: 0; }
+    .step-dot { position: absolute; left: 14px; top: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--bg); border: 2px solid var(--text); display: grid; place-items: center; }
+    .step-dot::after { content: ''; width: 6px; height: 6px; background: var(--text); border-radius: 50%; }
+    .step-content { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: var(--shadow); }
+    .step-content h4 { font-size: 1.2rem; margin-bottom: 8px; }
+    .step-content p { color: var(--muted); font-size: 0.95rem; }
+
+    /* СОЗДАНИЕ САЙТОВ */
+    .webdev-showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; background: var(--bg-alt); border: 1px solid var(--border); border-radius: 30px; padding: 50px; margin-top: 40px; }
+    .webdev-text h3 { font-size: 2rem; margin-bottom: 20px; }
+    .webdev-text p { color: var(--muted); font-size: 1.05rem; margin-bottom: 20px; }
+    .webdev-text ul { list-style: none; margin-bottom: 30px; }
+    .webdev-text li { display: flex; gap: 10px; margin-bottom: 10px; color: var(--muted); font-size: 0.95rem; }
+    .webdev-text li svg { width: 18px; height: 18px; color: var(--text); flex-shrink: 0; }
+    .mockup-container { position: relative; height: 350px; perspective: 1000px; }
+    .mockup-editor, .mockup-browser { position: absolute; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); border: 1px solid var(--border); overflow: hidden; transition: 0.5s; }
+    .mockup-editor { top: 0; left: 0; width: 80%; height: 80%; background: #fff; z-index: 1; transform: rotateY(5deg) translateZ(-20px); }
+    .editor-header { height: 30px; background: #f4f4f5; display: flex; align-items: center; padding: 0 10px; gap: 6px; border-bottom: 1px solid var(--border); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
+    .dot.red { background: #ff5f56; } .dot.yellow { background: #ffbd2e; } .dot.green { background: #27c93f; }
+    .editor-body { padding: 15px; font-family: 'Fira Code', monospace; font-size: 0.75rem; line-height: 1.6; color: #333; }
+    .code-purple { color: #8b5cf6; } .code-cyan { color: #06b6d4; } .code-green { color: #10b981; } .code-gray { color: #a1a1aa; }
+    .mockup-browser { bottom: 0; right: 0; width: 75%; height: 75%; background: #fff; z-index: 2; transform: rotateY(-5deg) translateZ(20px); }
+    .browser-header { height: 30px; background: #f4f4f5; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-bottom: 1px solid var(--border); }
+    .url-bar { flex-grow: 1; height: 16px; background: #e4e4e7; border-radius: 20px; font-size: 0.5rem; color: #666; display: flex; align-items: center; padding-left: 10px; }
+    .browser-body { padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: calc(100% - 30px); text-align: center; }
+    .browser-body h5 { font-size: 1rem; margin-bottom: 10px; }
+    .browser-body p { font-size: 0.6rem; color: var(--muted); margin-bottom: 15px; }
+    .fake-btn { padding: 6px 12px; background: var(--text); border-radius: 20px; font-size: 0.6rem; color: #fff; }
+
+    /* ТАРИФЫ */
+    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 900px; margin: 0 auto; }
+    .card { background: var(--bg); border: 1px solid var(--border); border-radius: 24px; padding: 50px 40px; transition: 0.3s; position: relative; box-shadow: var(--shadow); }
+    .card:hover { transform: translateY(-5px); border-color: var(--border-hover); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+    .card.featured { border: 2px solid var(--text); }
+    .card h3 { font-size: 1.4rem; margin-bottom: 15px; color: var(--muted); }
+    .price { font-family: 'Outfit'; font-size: 3.5rem; font-weight: 800; margin-bottom: 30px; }
+    .price span { font-family: 'Inter'; font-size: 1rem; color: var(--muted); font-weight: 400; }
+    .features-list { list-style: none; margin-bottom: 40px; }
+    .features-list li { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; color: var(--muted); font-size: 0.95rem; }
+    .features-list svg { width: 18px; height: 18px; color: var(--text); flex-shrink: 0; }
+
+    /* FAQ */
+    .faq-grid { max-width: 800px; margin: 0 auto; display: grid; gap: 16px; }
+    details { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 24px; cursor: pointer; transition: 0.3s; }
+    details:hover { border-color: var(--border-hover); }
+    details[open] { border-color: var(--text); }
+    summary { font-weight: 600; font-size: 1.1rem; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: '+'; font-size: 1.5rem; color: var(--text); transition: 0.3s; font-weight: 300; }
+    details[open] summary::after { content: '−'; transform: rotate(180deg); }
+    details p { margin-top: 16px; color: var(--muted); font-size: 0.95rem; line-height: 1.6; }
+
+    /* ФОРМА */
+    .form-section { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .form-text h2 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; margin-bottom: 20px; }
+    .form-text p { color: var(--muted); font-size: 1.1rem; }
+    .form-box { background: var(--bg-alt); padding: 50px; border-radius: 24px; border: 1px solid var(--border); }
+    .form-group { margin-bottom: 20px; }
+    .form-group input, .form-group select { width: 100%; background: #fff; border: 1px solid var(--border-hover); padding: 16px 20px; border-radius: 12px; color: var(--text); font-family: 'Inter'; font-size: 1rem; outline: none; transition: 0.3s; }
+    .form-group input:focus, .form-group select:focus { border-color: var(--text); box-shadow: 0 0 0 3px rgba(0,0,0,0.05); }
+    .form-group select { cursor: pointer; }
+    .form-box button { width: 100%; margin-top: 10px; }
+
+    footer { padding: 40px 0; border-top: 1px solid var(--border); text-align: center; color: var(--muted); font-size: 0.9rem; }
+
+    /* МОДАЛКА */
+    .modal { position: fixed; inset: 0; z-index: 9999; background: rgba(255, 255, 255, 0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(10px); }
+    .modal.active { opacity: 1; visibility: visible; }
+    .spinner { width: 60px; height: 60px; border: 3px solid rgba(0, 0, 0, 0.1); border-top: 3px solid var(--text); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 24px; }
+    .modal h3 { font-size: 1.8rem; margin-bottom: 10px; }
+    .modal p { color: var(--muted); }
+    .success-icon { display: none; width: 70px; height: 70px; border-radius: 50%; background: rgba(0, 0, 0, 0.05); border: 2px solid var(--text); align-items: center; justify-content: center; margin-bottom: 24px; }
+    .success-icon svg { width: 35px; height: 35px; stroke: var(--text); stroke-width: 3; fill: none; }
+    .modal.success .spinner { display: none; }
+    .modal.success .success-icon { display: flex; animation: pop 0.4s ease; }
+    @keyframes pop { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+    /* ================= СВЕТЛЫЙ ИИ ПОМОЩНИК ================= */
+    .chat-fab {
+      position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+      background: var(--text); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); z-index: 1000;
+      transition: 0.3s;
+    }
+    .chat-fab:hover { transform: scale(1.1) translateY(-5px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3); }
+    .chat-fab svg { width: 30px; height: 30px; fill: #fff; }
+    
+    .chat-window {
+      position: fixed; bottom: 100px; right: 30px; width: 380px; height: 600px;
+      background: #fff; border: 1px solid var(--border); border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      display: flex; flex-direction: column; z-index: 1001;
+      opacity: 0; visibility: hidden; transform: translateY(20px); transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .chat-window.active { opacity: 1; visibility: visible; transform: translateY(0); }
+    
+    .chat-header {
+      padding: 20px; border-bottom: 1px solid var(--border); background: #fafafa;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .chat-header-avatar { width: 40px; height: 40px; border-radius: 50%; background: #fff; border: 1px solid var(--border-hover); display: grid; place-items: center; }
+    .chat-header-avatar svg { width: 20px; height: 20px; stroke: var(--text); }
+    .chat-header-info h4 { font-size: 1rem; margin-bottom: 2px; }
+    .chat-header-info p { font-size: 0.75rem; color: #10b981; display: flex; align-items: center; gap: 5px; }
+    .chat-header-info p::before { content: ''; width: 6px; height: 6px; background: #10b981; border-radius: 50%; display: inline-block; }
+    .chat-close { margin-left: auto; cursor: pointer; color: var(--muted); font-size: 1.5rem; line-height: 1; transition: 0.3s; }
+    .chat-close:hover { color: var(--text); }
+
+    .chat-messages { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth; background: #fff; }
+    .message { max-width: 85%; padding: 12px 16px; border-radius: 16px; font-size: 0.9rem; line-height: 1.5; }
+    .message.bot { background: #f4f4f5; color: var(--text); border-bottom-left-radius: 4px; align-self: flex-start; }
+    .message.user { background: var(--text); color: #fff; border-bottom-right-radius: 4px; align-self: flex-end; }
+
+    .quick-replies { display: flex; gap: 8px; overflow-x: auto; padding: 10px 16px; border-top: 1px solid var(--border); background: #fafafa; scrollbar-width: none; }
+    .quick-replies::-webkit-scrollbar { display: none; }
+    .quick-btn {
+      background: #fff; border: 1px solid var(--border-hover); color: var(--text);
+      padding: 8px 14px; border-radius: 100px; font-size: 0.8rem; cursor: pointer;
+      white-space: nowrap; transition: 0.3s;
+    }
+    .quick-btn:hover { background: var(--text); color: #fff; border-color: var(--text); }
+
+    .typing-indicator { display: flex; gap: 4px; padding: 16px; background: #f4f4f5; border-radius: 16px; border-bottom-left-radius: 4px; align-self: flex-start; width: fit-content; }
+    .typing-indicator span { width: 6px; height: 6px; background: var(--muted); border-radius: 50%; animation: typing 1.4s infinite ease-in-out both; }
+    .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+    .chat-input-area { padding: 16px; border-top: 1px solid var(--border); display: flex; gap: 10px; background: #fff; }
+    .chat-input-area input {
+      flex-grow: 1; background: #f4f4f5; border: 1px solid transparent;
+      padding: 12px 16px; border-radius: 100px; color: var(--text); font-family: 'Inter'; outline: none; transition: 0.3s;
+    }
+    .chat-input-area input:focus { border-color: var(--border-hover); background: #fff; }
+    .chat-input-area button {
+      width: 44px; height: 44px; border-radius: 50%; background: var(--text); border: none;
+      display: grid; place-items: center; cursor: pointer; transition: 0.3s; flex-shrink: 0;
+    }
+    .chat-input-area button:hover { background: #333; transform: scale(1.05); }
+    .chat-input-area button svg { width: 20px; height: 20px; fill: #fff; margin-left: -2px; }
+
+    .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; text-align: center; padding: 140px 0 60px; }
+      .hero p { margin: 0 auto 30px; }
+      .hero-actions, .hero-features { justify-content: center; }
+      .hero-visual { height: 350px; margin-top: 20px; }
+      .core { width: 150px; height: 150px; } .ring-1 { width: 220px; height: 220px; } .ring-2 { width: 300px; height: 300px; }
+      .features-grid, .pricing-grid, .form-section, .gallery, .webdev-showcase { grid-template-columns: 1fr; }
+      .gallery { height: auto; } .gallery-item { height: 200px; }
+      .nav-links { display: none; }
+      .card, .form-box { padding: 30px 20px; }
+      .step { padding-left: 60px; } .roadmap::before { left: 20px; } .step-dot { left: 8px; width: 24px; height: 24px; }
+      .mockup-container { height: 300px; margin-top: 30px; }
+      .chat-window { width: calc(100% - 40px); right: 20px; bottom: 90px; height: 70vh; }
+      .chat-fab { bottom: 20px; right: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+
+  <header>
+    <div class="container nav">
+      <a href="#" class="brand"><div class="brand-icon"></div>NEURA</a>
+      <nav class="nav-links">
+        <a href="#features">Преимущества</a>
+        <a href="#curriculum">Программа</a>
+        <a href="#webdev">Создание сайтов</a>
+        <a href="#pricing">Тарифы</a>
+      </nav>
+      <a href="#contact" class="btn btn-primary" style="padding: 12px 28px;">Записаться</a>
+    </div>
+  </header>
+
+  <section class="hero container">
+    <div class="reveal">
+      <h1>Искусство <br><span>Интеллекта</span></h1>
+      <p>50 глубоких онлайн-уроков, персональные собеседования с экспертами и закрытые конференции в Zoom. От новичка до профи.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-primary">Начать обучение</a>
+        <a href="#pricing" class="btn btn-outline">Смотреть тарифы</a>
+      </div>
+      <div class="hero-features">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Доступ навсегда</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Живое общение</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Сертификат</span>
+      </div>
+    </div>
+    <div class="hero-visual reveal" style="transition-delay: 0.2s;">
+      <div class="ring ring-2"></div><div class="ring ring-1"></div><div class="core"></div>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>Почему выбирают NEURA</h2>
+        <p>Мы создали среду, в которой невозможно не вырасти.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+          <h3>Глубокая практика</h3>
+          <p>Никакой сухой теории. Только реальные кейсы, работа с нейросетями и создание собственных проектов.</p>
+        </div>
+        <div class="feature-card reveal" style="transition-delay: 0.1s;">
+          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+          <h3>Личный ментор</h3>
+          <p>Персональные собеседования 1-на-1. Эксперт поможет разобрать ошибки и составит вашу траекторию.</p>
+        </div>
+        <div class="feature-card reveal" style="transition-delay: 0.2s;">
+          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div>
+          <h3>Живые конференции</h3>
+          <p>Регулярные встречи в Zoom с приглашенными экспертами из IT-индустрии. Ответы на любые вопросы.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="curriculum">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>Ваш путь в ИИ</h2>
+        <p>От понимания базовых принципов до создания сложных AI-систем.</p>
+      </div>
+      <div class="roadmap reveal">
+        <div class="step"><div class="step-dot"></div><div class="step-content"><h4>1. Фундамент</h4><p>Что такое нейросети, как они обучаются и где применяются. Учимся правильно писать промпты.</p></div></div>
+        <div class="step"><div class="step-dot"></div><div class="step-content"><h4>2. Инструменты</h4><p>Обзор современных AI-сервисов (ChatGPT, Midjourney, Stable Diffusion) и работа с API.</p></div></div>
+        <div class="step"><div class="step-dot"></div><div class="step-content"><h4>3. Разработка сайтов с ИИ</h4><p>Учимся генерировать код, верстку и дизайн с помощью нейросетей. Создаем лендинги за пару часов.</p></div></div>
+        <div class="step"><div class="step-dot"></div><div class="step-content"><h4>4. Бизнес и Автоматизация</h4><p>Как внедрять ИИ в рабочие процессы, создавать ботов и автоматизировать рутину.</p></div></div>
+        <div class="step"><div class="step-dot"></div><div class="step-content"><h4>5. Финальный проект</h4><p>Разработка собственного кейса под руководством ментора. Защита проекта и получение сертификата.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="webdev">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>Создание сайтов с помощью ИИ</h2>
+        <p>Посмотрите, как нейросети превращают код в готовый продукт.</p>
+      </div>
+      <div class="webdev-showcase reveal">
+        <div class="webdev-text">
+          <h3>Код. Дизайн. Запуск.</h3>
+          <p>В рамках курса мы разберем, как использовать ChatGPT и другие инструменты для написания чистого HTML/CSS/JS кода.</p>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Генерация структуры сайта</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Создание адаптивного дизайна</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Написание скриптов и анимаций</li>
+          </ul>
+          <a href="#contact" class="btn btn-primary" style="margin-top: 10px;">Хочу также</a>
+        </div>
+        <div class="mockup-container">
+          <div class="mockup-editor">
+            <div class="editor-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+            <div class="editor-body">
+              <div><span class="code-purple">&lt;div</span> <span class="code-cyan">class</span>=<span class="code-green">"hero"</span><span class="code-purple">&gt;</span></div>
+              <div>&nbsp;&nbsp;<span class="code-purple">&lt;h1&gt;</span>Привет, мир<span class="code-purple">&lt;/h1&gt;</span></div>
+              <div>&nbsp;&nbsp;<span class="code-purple">&lt;p&gt;</span>Создано с ИИ<span class="code-purple">&lt;/p&gt;</span></div>
+              <div>&nbsp;&nbsp;<span class="code-purple">&lt;button</span> <span class="code-cyan">class</span>=<span class="code-green">"btn"</span><span class="code-purple">&gt;</span></div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;Нажми меня</div>
+              <div>&nbsp;&nbsp;<span class="code-purple">&lt;/button&gt;</span></div>
+              <div><span class="code-purple">&lt;/div&gt;</span></div>
+              <div class="code-gray">// AI генерирует стили...</div>
+            </div>
+          </div>
+          <div class="mockup-browser">
+            <div class="browser-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div><div class="url-bar">neura-site.com</div></div>
+            <div class="browser-body"><h5>Привет, мир</h5><p>Создано с ИИ</p><div class="fake-btn">Нажми меня</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="pricing">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>Инвестиция в будущее</h2>
+        <p>Прозрачные условия. Никаких скрытых платежей.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="card reveal">
+          <h3>Годовой доступ</h3>
+          <div class="price">7 000 <span>₽</span></div>
+          <ul class="features-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> 50 онлайн-уроков</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Онлайн-собеседование</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Zoom-конференции</li>
+          </ul>
+          <button class="btn btn-outline" style="width: 100%;" onclick="selectTariff('Годовой — 7 000 ₽')">Выбрать <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+        </div>
+        <div class="card featured reveal" style="transition-delay: 0.2s;">
+          <h3>10 лет доступа</h3>
+          <div class="price">28 000 <span>₽</span></div>
+          <ul class="features-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Все 50 уроков + обновления</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Приоритетные собеседования</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Закрытые Zoom-конференции</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Сертификат</li>
+          </ul>
+          <button class="btn btn-primary" style="width: 100%;" onclick="selectTariff('10 лет — 28 000 ₽')">Выбрать <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>Частые вопросы</h2>
+        <p>Всё, что вы хотели узнать перед стартом.</p>
+      </div>
+      <div class="faq-grid reveal">
+        <details><summary>Я совсем новичок, мне подойдет?</summary><p>Абсолютно. Программа построена с нуля. Мы начинаем с базовых понятий и постепенно переходим к сложным темам.</p></details>
+        <details><summary>Как проходят собеседования?</summary><p>Собеседования проходят в формате 1-на-1 в Zoom. Вы общаетесь с экспертом, разбираете ошибки и получаете обратную связь.</p></details>
+        <details><summary>Что если я не смогу присутствовать на Zoom-конференции?</summary><p>Ничего страшного. Все конференции записываются, и вы получите доступ к видеозаписи на следующий день.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
+    <div class="container form-section">
+      <div class="form-text reveal">
+        <h2>Готовы изменить будущее?</h2>
+        <p>Оставьте заявку. Наш эксперт свяжется с вами и поможет выбрать идеальный формат обучения.</p>
+      </div>
+      <div class="form-box reveal" style="transition-delay: 0.2s;">
+        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) { formSuccess(); }"></iframe>
+        <form id="signupForm" action="https://api.web3forms.com/submit" method="POST" target="hidden_iframe" onsubmit="submitted=true; formSubmit();">
+          <input type="hidden" name="access_key" value="0c8ed165-d9dc-4a4a-9f06-51baea4a0767">
+          <input type="hidden" name="subject" value="Заявка NEURA (Mistral AI)">
+          <div class="form-group"><input type="text" name="name" placeholder="Ваше имя" required></div>
+          <div class="form-group"><input type="text" name="contact" placeholder="Email или Telegram" required></div>
+          <div class="form-group">
+            <select name="tariff" id="tariffSelect" required>
+              <option value="" disabled selected>Выберите тариф</option>
+              <option value="Годовой — 7 000 ₽">Годовой — 7 000 ₽</option>
+              <option value="10 лет — 28 000 ₽">10 лет — 28 000 ₽</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Отправить заявку</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer><div class="container"><p>© 2026 NEURA. Будущее Искусственного Интеллекта.</p></div></footer>
+
+  <div class="modal" id="modal">
+    <div class="spinner"></div>
+    <div class="success-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+    <h3 id="modalTitle">Отправка...</h3>
+    <p id="modalText">Пожалуйста, подождите.</p>
+  </div>
+
+  <!-- ================= ИИ ПОМОЩНИК (MISTRAL AI) ================= -->
+  <div class="chat-fab" id="chatFab">
+    <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+  </div>
+
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <div class="chat-header-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/><circle cx="7.5" cy="14.5" r="1.5"/><circle cx="16.5" cy="14.5" r="1.5"/></svg>
+      </div>
+      <div class="chat-header-info">
+        <h4>NEURA AI</h4>
+        <p>Mistral AI</p>
+      </div>
+      <div class="chat-close" id="chatClose">×</div>
+    </div>
+    
+    <div class="chat-messages" id="chatMessages">
+      <div class="message bot">Привет! Я — нейросеть Mistral AI, интегрированная в NEURA. Спросите меня о чём угодно: о курсе, ценах, создании сайтов или просто поболтаем. Я отвечу на любой вопрос!</div>
+    </div>
+
+    <div class="quick-replies" id="quickReplies">
+      <button class="quick-btn" onclick="sendQuickReply('Расскажи о курсе')">📚 О курсе</button>
+      <button class="quick-btn" onclick="sendQuickReply('Сколько стоят курсы?')">💰 Цены</button>
+      <button class="quick-btn" onclick="sendQuickReply('Вы учите создавать сайты?')">💻 Сайты</button>
+      <button class="quick-btn" onclick="sendQuickReply('Как записаться?')">✍️ Записаться</button>
+    </div>
+
+    <div class="chat-input-area">
+      <input type="text" id="chatInput" placeholder="Спросите Mistral AI..." autocomplete="off">
+      <button id="chatSend">
+        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // === 1. АНИМАЦИИ И ФОРМА ===
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    window.selectTariff = function(val) {
+      document.getElementById('tariffSelect').value = val;
+      document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    let submitted = false;
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalText = document.getElementById('modalText');
+
+    function formSubmit() {
+      modal.className = 'modal active';
+      modalTitle.textContent = 'Отправка данных';
+      modalText.textContent = 'Устанавливаем безопасное соединение...';
+    }
+
+    function formSuccess() {
+      if (submitted) {
+        modal.classList.add('success');
+        modalTitle.textContent = 'Заявка принята!';
+        modalText.textContent = 'Мы свяжемся с вами в ближайшее время.';
+        document.getElementById('signupForm').reset();
+        setTimeout(() => { modal.classList.remove('active', 'success'); }, 4000);
+        submitted = false;
+      }
+    }
+
+    // === 2. ИНТЕГРАЦИЯ MISTRAL AI ===
+    const MISTRAL_API_KEY = 'mstrl_247AorD4CYzS58b8ja1xku5kWiP6vjgz_1DQxAU';
+    const MISTRAL_API_URL = 'https://api.mistral.ai/v1/chat/completions';
+
+    const chatFab = document.getElementById('chatFab');
+    const chatWindow = document.getElementById('chatWindow');
+    const chatClose = document.getElementById('chatClose');
+    const chatInput = document.getElementById('chatInput');
+    const chatSend = document.getElementById('chatSend');
+    const chatMessages = document.getElementById('chatMessages');
+
+    chatFab.addEventListener('click', () => chatWindow.classList.toggle('active'));
+    chatClose.addEventListener('click', () => chatWindow.classList.remove('active'));
+
+    // История диалога для контекста
+    let chatHistory = [
+      { role: 'system', content: 'Ты — дружелюбный и умный ИИ-помощник на сайте NEURA. Твоя задача — консультировать пользователей по вопросам курсов по искусственному интеллекту. Тарифы: Годовой — 7000 руб, 10 лет — 28000 руб. Программа включает 50 уроков, собеседования в Zoom, создание сайтов с помощью ИИ. Отвечай кратко, вежливо и по делу. Если пользователь спрашивает о чем-то не связанном с курсами, можешь ответить на вопрос, но мягко направь его к теме обучения или предложи оставить заявку.' }
+    ];
+
+    function addMessage(text, sender) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `message ${sender}`;
+      msgDiv.innerHTML = text.replace(/\n/g, '<br>');
+      chatMessages.appendChild(msgDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function showTyping() {
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'typing-indicator';
+      typingDiv.innerHTML = '<span></span><span></span><span></span>';
+      chatMessages.appendChild(typingDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      return typingDiv;
+    }
+
+    async function getMistralResponse(userMessage) {
+      // Добавляем сообщение пользователя в историю
+      chatHistory.push({ role: 'user', content: userMessage });
+
+      try {
+        const response = await fetch(MISTRAL_API_URL, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${MISTRAL_API_KEY}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            model: 'mistral-small-latest', // Используем актуальную модель
+            messages: chatHistory,
+            temperature: 0.7,
+            max_tokens: 500
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || `Ошибка сервера: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const botReply = data.choices[0].message.content;
+
+        // Сохраняем ответ бота в историю
+        chatHistory.push({ role: 'assistant', content: botReply });
+        
+        // Ограничиваем историю, чтобы не перегружать контекст (последние 10 сообщений)
+        if (chatHistory.length > 12) {
+          chatHistory = [chatHistory[0], ...chatHistory.slice(-10)];
+        }
+
+        return botReply;
+
+      } catch (error) {
+        console.error('Mistral API Error:', error);
+        
+        // Обработка ошибки CORS (частая проблема при локальном запуске)
+        if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+          return 'Кажется, браузер блокирует прямой запрос к Mistral AI (проблема CORS). Чтобы ИИ-помощник заработал, пожалуйста, разместите сайт на реальном хостинге (например, GitHub Pages или Vercel). А пока вы можете задать мне вопросы о курсе через кнопки быстрого ответа!';
+        }
+
+        // Если ключ неверный или лимит исчерпан
+        if (error.message.includes('401')) {
+          return 'Ошибка авторизации. Пожалуйста, проверьте API-ключ.';
+        }
+        if (error.message.includes('429')) {
+          return 'Слишком много запросов. Пожалуйста, подождите немного и попробуйте снова.';
+        }
+
+        return 'Произошла ошибка при обращении к нейросети. Попробуйте позже или задайте вопрос через форму заявки.';
+      }
+    }
+
+    async function handleSend(textToSend = null) {
+      const text = textToSend || chatInput.value.trim();
+      if (!text) return;
+
+      addMessage(text, 'user');
+      if (!textToSend) chatInput.value = '';
+
+      const typing = showTyping();
+
+      // Получаем ответ от Mistral AI
+      const response = await getMistralResponse(text);
+
+      typing.remove();
+      addMessage(response, 'bot');
+    }
+
+    window.sendQuickReply = function(text) {
+      handleSend(text);
+    };
+
+    chatSend.addEventListener('click', () => handleSend());
+    chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSend(); });
+  </script>
+</body>
+</html>
